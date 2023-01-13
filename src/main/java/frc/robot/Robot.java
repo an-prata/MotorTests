@@ -5,13 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.pheonix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.XboxController;
 
 /**
@@ -21,13 +20,10 @@ import edu.wpi.first.wpilibj.XboxController;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final boolean IS_TALON_MOTOR = true;
-  private static final int CONTROLLER_PORT = 1;
-  private static final int MOTOR_CAN_ID = 0;
-  private static final int CANCODER_START_ID = 1;
-  private static final int CANCODER_COUNT = 4;
+  private static final boolean IS_TALON_MOTOR = false;
+  private static final int CONTROLLER_PORT = 0;
+  private static final int MOTOR_CAN_ID = 2;
   
-  private CANCoder[] canCoders;
   private XboxController xboxController;
   private TalonSRX talon;
   private CANSparkMax canSparkMax;
@@ -37,7 +33,17 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   @Override
-  public void robotInit() {}
+  public void robotInit() {
+    // init motors based on MOTOR_CAN_ID constant
+    if (IS_TALON_MOTOR)
+      talon = new TalonSRX(MOTOR_CAN_ID);
+    else
+      canSparkMax = new CANSparkMax(MOTOR_CAN_ID, MotorType.kBrushless);
+  
+    // init controller (man, having a motor controller AND xbox controller
+    // is hella confusing).
+    xboxController = new XboxController(CONTROLLER_PORT);
+  }
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -68,22 +74,7 @@ public class Robot extends TimedRobot {
   
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {
-    // init motors based on MOTOR_CAN_ID constant
-    if (IS_TALON_MOTOR)
-      talon = new TalonSRX(MOTOR_CAN_ID);
-    else
-      canSparkMax = new CANSparkMax(MOTOR_CAN_ID, MotorType.kBrushless);
-  
-    // init controller (man, having a motor controller AND xbox controller
-    // is hella confusing).
-    xboxController = new XboxController(CONTROLLER_PORT);
-  
-    // init CAN Coders in such a way that the index of any given element in canCoders[]
-    // is equal to the CAN ID used to initialize it.
-    for (int canID = CANCODER_START_ID; canID <= CANCODER_START_ID + CANCODER_COUNT; canID++)
-      canCoders[canID] = new CANCoder(canID);    
-  }
+  public void teleopInit() {}
 
   /** This function is called periodically during operator control. */
   @Override
@@ -97,9 +88,6 @@ public class Robot extends TimedRobot {
       RelativeEncoder encoder = canSparkMax.getEncoder();
       SmartDashboard.putNumber("CANSparkMax Encoder Position", encoder.getPosition());
     }
-     
-    for (int canID = CANCODER_START_ID; canID <= CANCODER_START_ID + CANCODER_COUNT; canID++)
-      SmartDashboard.putNumber("CAN Coder ID - " + canID + " Position:", canCoders[canID].getPosition());
   }
 
   /** This function is called once when the robot is disabled. */
