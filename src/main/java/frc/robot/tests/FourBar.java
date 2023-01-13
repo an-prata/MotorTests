@@ -32,7 +32,7 @@ public class FourBar implements Runnable {
     private static final double PID_I = 0.0;
     private static final double PID_D = 0.0;
     
-    public static final FourBar instance = new FourBar(MOTOR_CAN_ID, ENCODER_CHANNEL);
+    private static final FourBar instance = new FourBar(MOTOR_CAN_ID, ENCODER_CHANNEL);
 
     private CANSparkMax motor;
     private DutyCycleEncoder encoder;
@@ -76,9 +76,6 @@ public class FourBar implements Runnable {
         instance.executorService.shutdown();
     }
 
-    /**
-     * For use with threads only, do not call.
-     */
     @Override
     public void run() {
         double encoderPosition = encoder.get();
