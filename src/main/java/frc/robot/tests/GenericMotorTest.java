@@ -10,6 +10,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * Motor test for most motors, adjust constants before hand.
+ */
 public class GenericMotorTest {
     private static final boolean IS_TALON_MOTOR = false;
     private static final int CONTROLLER_PORT = 0;
@@ -19,6 +22,9 @@ public class GenericMotorTest {
     private TalonSRX talon;
     private CANSparkMax canSparkMax;
 
+    /**
+     * Run in robotInit.
+     */
     public void init() {
         // init motors based on MOTOR_CAN_ID constant
         if (IS_TALON_MOTOR)
@@ -31,6 +37,9 @@ public class GenericMotorTest {
         xboxController = new XboxController(CONTROLLER_PORT);
     }
 
+    /**
+     * Run in teleopPeriodic.
+     */
     public void periodic() {
         double setSpeed = xboxController.getLeftY();
   
