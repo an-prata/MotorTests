@@ -9,6 +9,9 @@ public class Claw {
 
     private DoubleSolenoid clawSolenoid;
 
+    private static final int FORWARD_CHANNEL = 4;
+    private static final int REVERSE_CHANNEL = 5;
+
     private boolean pneumaticsTransitioning;
     private boolean clawClosed;
 
@@ -19,7 +22,7 @@ public class Claw {
         pneumaticsTransitioning = false;
         clawClosed = false;
 
-        clawSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 4, 5);
+        clawSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, FORWARD_CHANNEL, REVERSE_CHANNEL);
     }
 
     public static void run() {
