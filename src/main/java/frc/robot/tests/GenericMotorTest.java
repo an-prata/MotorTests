@@ -14,18 +14,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Motor test for most motors, adjust constants before hand.
  */
 public class GenericMotorTest {
-    private static final boolean IS_TALON_MOTOR = false;
+    private static final boolean IS_TALON_MOTOR = true;
     private static final int CONTROLLER_PORT = 0;
     private static final int MOTOR_CAN_ID = 2;
     
-    private XboxController xboxController;
-    private TalonSRX talon;
-    private CANSparkMax canSparkMax;
+    private static XboxController xboxController;
+    private static TalonSRX talon;
+    private static CANSparkMax canSparkMax;
 
     /**
      * Run in robotInit.
      */
-    public void init() {
+    public static void init() {
         // init motors based on MOTOR_CAN_ID constant
         if (IS_TALON_MOTOR)
             talon = new TalonSRX(MOTOR_CAN_ID);
@@ -40,7 +40,7 @@ public class GenericMotorTest {
     /**
      * Run in teleopPeriodic.
      */
-    public void periodic() {
+    public static void periodic() {
         double setSpeed = xboxController.getLeftY();
   
         if (IS_TALON_MOTOR) {
