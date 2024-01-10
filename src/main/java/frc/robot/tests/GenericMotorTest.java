@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class GenericMotorTest {
     private static final boolean IS_TALON_MOTOR = true;
     private static final int CONTROLLER_PORT = 0;
-    private static final int MOTOR_CAN_ID = 2;
+    private static final int MOTOR_CAN_ID = 6;
     
     private static XboxController xboxController;
     private static TalonSRX talon;
@@ -42,6 +42,8 @@ public class GenericMotorTest {
      */
     public static void periodic() {
         double setSpeed = xboxController.getLeftY();
+
+        setSpeed = Math.signum(setSpeed) * (Math.abs(setSpeed) > 0.8 ? 0.8 : Math.abs(setSpeed));
   
         if (IS_TALON_MOTOR) {
             talon.set(TalonSRXControlMode.PercentOutput, setSpeed);
